@@ -33,7 +33,7 @@ public class SceneImpl implements Scene {
   @Override
   public void activate() {
     final String result = stateSetter.get();
-    logger.info(result);
+    logger.trace(result);
   }
 
   @Override
