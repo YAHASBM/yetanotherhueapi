@@ -327,6 +327,7 @@ public class Hue {
   }
 
   public HueEventSource subscribeToEvents(final HueEventListener eventListener) {
+    BackgroundEventSource eventSource = null;
     try {
       SSLSocketFactory factory;
       X509TrustManager trustManager;
@@ -349,14 +350,17 @@ public class Hue {
           new EventSource.Builder(ConnectStrategy.http(eventUrl.toURI())
               .httpClient(client)
               .headers(Headers.of(HUE_APPLICATION_KEY_HEADER, apiKey))
-              .connectTimeout(5000, TimeUnit.MILLISECONDS)
-          ).retryDelay(3000, TimeUnit.MILLISECONDS)
+              .connectTimeout(10, TimeUnit.SECONDS)
+          ).retryDelay(10, TimeUnit.SECONDS)
       );
 
-      final BackgroundEventSource eventSource = builder.build();
+      eventSource = builder.build();
       eventSource.start();
       return new LaunchDarklyEventSource(eventSource);
     } catch (final Exception e) {
+      if( eventSource != null){
+        eventSource.close();
+      }
       throw new HueApiException(e);
     }
 
