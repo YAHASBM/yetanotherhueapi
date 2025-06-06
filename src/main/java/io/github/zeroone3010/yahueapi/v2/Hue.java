@@ -190,6 +190,8 @@ public class Hue {
       final SecureJsonFactory factory = (SecureJsonFactory) objectMapper.getFactory();
       urlConnection.setSSLSocketFactory(factory.getSocketFactory());
       urlConnection.setHostnameVerifier(factory.getHostnameVerifier());
+      urlConnection.setConnectTimeout(60_000);
+      urlConnection.setReadTimeout(60_000);
       urlConnection.setRequestProperty(HUE_APPLICATION_KEY_HEADER, apiKey);
       return urlConnection;
     } catch (IOException e) {
